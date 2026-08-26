@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Page Not Found - VoiceOne{% endblock %}
+{% block content %}
+<div class="paper-panel" style="max-width: 600px; margin: 3rem auto; text-align: center; padding: 3rem 2rem;">
+    <h1 style="font-size: 3rem; margin-bottom: 0.5rem;">404</h1>
+    <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Legislative Document Not Found</h2>
+    <p style="color: var(--text-ink-muted); margin-bottom: 2rem;">
+        The bill, poll, or civic page you requested could not be located in the VoiceOne gazette registry.
+    </p>
+    <a href="{{ url_for('polls.dashboard') }}" class="btn btn-primary">Return to Active Bills</a>
+</div>
+{% endblock %}

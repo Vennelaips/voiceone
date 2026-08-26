@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Citizen Authentication - VoiceOne{% endblock %}
+
+{% block content %}
+<div style="max-width: 680px; margin: 0 auto;">
+    
+    <div class="paper-panel" id="auth-panel">
+        <div class="paper-panel-header">
+            <div>
+                <h2>Citizen Identity Authentication</h2>
+                <p style="font-size: 0.9rem; color: var(--text-ink-muted);">DigiLocker OAuth 2.0 & Salted Aadhaar Verification</p>
+            </div>
+            <div class="brand-badge" style="background: var(--amaranth-pink);">18+ Required</div>
+        </div>
+
+        <!-- Privacy Shield Notice -->
+        <div class="alert alert-info" style="font-size: 0.88rem; margin-bottom: 1.5rem;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <div>
+                <strong>Zero-Knowledge Aadhaar Privacy Guarantee:</strong>
+                <br>Your 12-digit Aadhaar number is <em>never</em> stored in our database. It is instantly transformed into a cryptographically salted one-way hash (SHA-256) to ensure anonymous, one-citizen-one-vote security.
+            </div>
+        </div>
+
+        <!-- Direct Verification Form -->
+        <form action="{{ url_for('auth.login') }}" method="POST" id="login-form">
+            
+            <div class="form-group">
+                <label for="name-input" class="form-label">
+                    Full Legal Name (as per DigiLocker / Aadhaar)
+                </label>
+                <input type="text" id="name-input" name="name" class="form-control" placeholder="e.g. Aarav Sharma" value="{{ name or '' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="aadhaar-input" class="form-label">
+                    12-Digit Aadhaar Number
+                </label>
+                <input type="text" id="aadhaar-input" name="aadhaar" class="form-control" placeholder="xxxx xxxx xxxx (12 numeric digits)" maxlength="14" required>
+                <small style="color: var(--text-ink-muted); font-size: 0.8rem; display: block; margin-top: 0.3rem;">
+                    * Cleaned and salted into cryptographic hash <code>citizen_v_...</code> immediately upon submission.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="dob-input" class="form-label">
+                    Date of Birth (Minimum age: 18 years)
+                </label>
+                <input type="date" id="dob-input" name="dob" class="form-control" value="{{ dob or '' }}" required>
+                <div id="age-feedback" style="margin-top: 0.4rem; font-size: 0.85rem;"></div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+                <button type="submit" class="btn btn-primary" id="btn-submit-verify" style="flex: 1; padding: 0.9rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                    Verify & Enter VoiceOne
+                </button>
+                
+                <a href="{{ url_for('auth.digilocker_initiate') }}" class="btn btn-secondary" id="btn-digilocker-oauth" style="flex: 1; padding: 0.9rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9F2B68" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    Login with DigiLocker OAuth
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Security & Civic Charter Paper Note -->
+    <div class="paper-card" style="margin-top: 1.5rem; text-align: center;">
+        <h4 style="margin-bottom: 0.5rem;">VoiceOne Civic Democracy Standard</h4>
+        <p style="font-size: 0.85rem; color: var(--text-ink-muted);">
+            Each authenticated voter receives <strong>exactly 1 vote</strong> per bill. Voting records are immutable, transparently aggregated, and fully anonymous.
+        </p>
+    </div>
+
+</div>
+{% endblock %}

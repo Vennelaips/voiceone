@@ -1,0 +1,589 @@
+/* ==========================================================================
+   VoiceOne Design System - Sage Green & Amaranth Pink with E-Ink Paper Panels
+   Background: Sage Green (#87AE73)
+   Icons, Text, Accents: Amaranth Pink (#9F2B68)
+   Panels: Tactile E-Ink / Warm Paper Panels (#FAF8F5 / #F4EFEB)
+   ========================================================================== */
+
+:root {
+  --bg-sage-green: #87AE73;
+  --bg-sage-dark: #6E945B;
+  --bg-sage-light: #9DC189;
+  
+  --amaranth-pink: #9F2B68;
+  --amaranth-deep: #7D1D4F;
+  --amaranth-light: #BA3D7D;
+  --amaranth-soft: #F9EAF2;
+  --amaranth-tint: rgba(159, 43, 104, 0.12);
+  
+  --paper-cream: #FAF7F2;
+  --paper-card: #FFFFFF;
+  --paper-border: #9F2B68;
+  --paper-subtle-border: #C8D8BF;
+  --paper-shadow: 4px 4px 0px rgba(159, 43, 104, 0.35);
+  --paper-shadow-hover: 6px 6px 0px rgba(159, 43, 104, 0.45);
+  
+  --text-ink-dark: #2B1622;
+  --text-ink-muted: #5C3E50;
+  --text-on-pink: #FFFFFF;
+  
+  --color-for: #2E7D32;
+  --color-against: #C2185B;
+  --radius-paper: 8px;
+  --radius-pill: 9999px;
+  --font-heading: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-sage-green);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(159, 43, 104, 0.06) 0%, transparent 25%);
+  color: var(--text-ink-dark);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--amaranth-pink);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: var(--amaranth-pink);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  color: var(--amaranth-deep);
+}
+
+/* ==========================================================================
+   Navigation Bar (Paper Civic Header)
+   ========================================================================== */
+.navbar {
+  background: var(--paper-cream);
+  border-bottom: 3px solid var(--amaranth-pink);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.container {
+  width: 92%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--amaranth-pink);
+}
+
+.brand-badge {
+  background: var(--amaranth-pink);
+  color: #FFF;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.nav-link {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--amaranth-pink);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.nav-link:hover, .nav-link.active {
+  background: var(--amaranth-tint);
+  color: var(--amaranth-deep);
+}
+
+.user-badge-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--amaranth-soft);
+  border: 1.5px solid var(--amaranth-pink);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--amaranth-pink);
+}
+
+/* ==========================================================================
+   E-Ink Paper Panels & Cards
+   ========================================================================== */
+.paper-panel {
+  background: var(--paper-cream);
+  border: 2.5px solid var(--amaranth-pink);
+  border-radius: var(--radius-paper);
+  box-shadow: var(--paper-shadow);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.paper-panel:hover {
+  box-shadow: var(--paper-shadow-hover);
+}
+
+.paper-panel-header {
+  border-bottom: 2px dashed var(--amaranth-pink);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.paper-card {
+  background: var(--paper-card);
+  border: 2px solid var(--paper-border);
+  border-radius: var(--radius-paper);
+  box-shadow: var(--paper-shadow);
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.paper-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--paper-shadow-hover);
+}
+
+/* ==========================================================================
+   Tactile Buttons & Actions
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: var(--radius-paper);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  border: 2px solid var(--amaranth-pink);
+}
+
+.btn-primary {
+  background: var(--amaranth-pink);
+  color: var(--text-on-pink);
+  box-shadow: 3px 3px 0px #4A102E;
+}
+
+.btn-primary:hover {
+  background: var(--amaranth-deep);
+  color: #FFF;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #4A102E;
+}
+
+.btn-primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #4A102E;
+}
+
+.btn-secondary {
+  background: var(--paper-cream);
+  color: var(--amaranth-pink);
+  box-shadow: 3px 3px 0px var(--amaranth-pink);
+}
+
+.btn-secondary:hover {
+  background: var(--amaranth-soft);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--amaranth-pink);
+}
+
+.btn-secondary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px var(--amaranth-pink);
+}
+
+.btn-for {
+  background: #E8F5E9;
+  color: var(--color-for);
+  border: 2px solid var(--color-for);
+  box-shadow: 3px 3px 0px var(--color-for);
+  font-size: 1.1rem;
+  padding: 0.9rem 2rem;
+}
+
+.btn-for:hover, .btn-for.active {
+  background: var(--color-for);
+  color: #FFF;
+  box-shadow: 4px 4px 0px #1B5E20;
+}
+
+.btn-against {
+  background: #FCE4EC;
+  color: var(--color-against);
+  border: 2px solid var(--color-against);
+  box-shadow: 3px 3px 0px var(--color-against);
+  font-size: 1.1rem;
+  padding: 0.9rem 2rem;
+}
+
+.btn-against:hover, .btn-against.active {
+  background: var(--color-against);
+  color: #FFF;
+  box-shadow: 4px 4px 0px #880E4F;
+}
+
+/* ==========================================================================
+   Hero & Header Elements
+   ========================================================================== */
+.hero-banner {
+  background: var(--paper-cream);
+  border: 3px solid var(--amaranth-pink);
+  border-radius: var(--radius-paper);
+  box-shadow: 6px 6px 0px rgba(159, 43, 104, 0.4);
+  padding: 2.5rem;
+  margin: 2rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-tagline {
+  font-size: 1.15rem;
+  color: var(--text-ink-muted);
+  max-width: 750px;
+  margin: 0.75rem auto 1.5rem;
+}
+
+.hero-stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.hero-stat-pill {
+  background: var(--paper-card);
+  border: 1.5px solid var(--amaranth-pink);
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  color: var(--amaranth-pink);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ==========================================================================
+   Voting Progress Bar & Visualizer
+   ========================================================================== */
+.vote-bar-container {
+  margin: 1.25rem 0;
+}
+
+.vote-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.label-for { color: var(--color-for); }
+.label-against { color: var(--color-against); }
+
+.vote-bar-track {
+  height: 24px;
+  background: #E0E0E0;
+  border: 2px solid var(--text-ink-dark);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  display: flex;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.vote-bar-for {
+  background: #4CAF50;
+  height: 100%;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vote-bar-against {
+  background: var(--amaranth-pink);
+  height: 100%;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   Forms & Inputs (Tactile Paper Style)
+   ========================================================================== */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--amaranth-pink);
+  margin-bottom: 0.4rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.85rem 1.15rem;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  background: #FFF;
+  color: var(--text-ink-dark);
+  border: 2px solid var(--amaranth-pink);
+  border-radius: var(--radius-paper);
+  box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--amaranth-deep);
+  box-shadow: 0 0 0 3px var(--amaranth-tint);
+}
+
+textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* ==========================================================================
+   Alerts & Notifications
+   ========================================================================== */
+.alert {
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-paper);
+  border: 2px solid;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: var(--paper-shadow);
+}
+
+.alert-success {
+  background: #E8F5E9;
+  border-color: #2E7D32;
+  color: #1B5E20;
+}
+
+.alert-error {
+  background: #FFEBEE;
+  border-color: #C62828;
+  color: #B71C1C;
+}
+
+.alert-info {
+  background: var(--amaranth-soft);
+  border-color: var(--amaranth-pink);
+  color: var(--amaranth-deep);
+}
+
+.alert-warning {
+  background: #FFF8E1;
+  border-color: #F57F17;
+  color: #E65100;
+}
+
+/* ==========================================================================
+   Civic Forum & Discussion Cards
+   ========================================================================== */
+.forum-guidelines-banner {
+  background: #FFFDF9;
+  border: 2px dashed var(--amaranth-pink);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-paper);
+  margin-bottom: 1.5rem;
+  font-size: 0.88rem;
+  color: var(--text-ink-muted);
+}
+
+.forum-guidelines-banner strong {
+  color: var(--amaranth-pink);
+}
+
+.discussion-post {
+  background: #FFF;
+  border: 2px solid var(--paper-border);
+  border-radius: var(--radius-paper);
+  box-shadow: var(--paper-shadow);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  transition: all 0.15s ease;
+}
+
+.discussion-post:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--paper-shadow-hover);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--paper-subtle-border);
+  padding-bottom: 0.5rem;
+}
+
+.author-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.author-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background: var(--amaranth-pink);
+  color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.author-name {
+  font-weight: 700;
+  color: var(--amaranth-pink);
+  font-size: 0.9rem;
+}
+
+.civic-verified-tag {
+  background: #E8F5E9;
+  color: #2E7D32;
+  border: 1px solid #2E7D32;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--radius-pill);
+}
+
+.post-time {
+  font-size: 0.8rem;
+  color: var(--text-ink-muted);
+}
+
+.post-content {
+  font-size: 0.95rem;
+  color: var(--text-ink-dark);
+  line-height: 1.55;
+  margin-bottom: 0.75rem;
+}
+
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.footer {
+  background: var(--paper-cream);
+  border-top: 3px solid var(--amaranth-pink);
+  padding: 2rem 0;
+  margin-top: auto;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-ink-muted);
+}
+
+.footer-privacy-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--amaranth-soft);
+  border: 1px solid var(--amaranth-pink);
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-pill);
+  margin-top: 0.75rem;
+  font-weight: 600;
+  color: var(--amaranth-pink);
+}
+
+/* Responsive Grid */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .paper-panel {
+    padding: 1.25rem;
+  }
+  .hero-banner {
+    padding: 1.5rem;
+  }
+}

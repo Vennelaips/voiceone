@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: voiceone-civic-polling
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 4 --threads 2
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: MONGO_URI
+        sync: false
+      - key: AADHAAR_HASH_SALT
+        generateValue: true
+      - key: DIGILOCKER_CLIENT_ID
+        sync: false
+      - key: DIGILOCKER_CLIENT_SECRET
+        sync: false
+      - key: FLASK_DEBUG
+        value: "False"

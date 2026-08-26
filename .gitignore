@@ -1,0 +1,23 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments & Dependencies
+.env
+.venv/
+env/
+venv/
+ENV/
+
+# Selenium WebDriver Cache
+.wdm/
+chromedriver.exe
+geckodriver.exe
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

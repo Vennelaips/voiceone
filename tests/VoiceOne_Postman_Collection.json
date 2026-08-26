@@ -1,0 +1,182 @@
+{
+  "info": {
+    "_postman_id": "voiceone-postman-collection-v1",
+    "name": "VoiceOne - Secure Civic Polling API",
+    "description": "API Test Suite for VoiceOne: DigiLocker OAuth & Aadhaar Hashing, 18+ Age Eligibility, Verified Bill Creation, Binary Voting (For/Against), and Civic Moderation Forum with Automated Violation Removal.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. System Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/health",
+          "host": ["{{base_url}}"],
+          "path": ["api", "health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2. Citizen Identity Auth (Eligible 18+ Voter)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Aarav Sharma\",\n  \"aadhaar\": \"847291823749\",\n  \"dob\": \"1998-04-12\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/auth/verify",
+          "host": ["{{base_url}}"],
+          "path": ["api", "auth", "verify"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3. Citizen Identity Auth (Underage < 18 - Should Reject 403)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Minor Citizen\",\n  \"aadhaar\": \"998877665544\",\n  \"dob\": \"2014-06-20\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/auth/verify",
+          "host": ["{{base_url}}"],
+          "path": ["api", "auth", "verify"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4. List All Active Verified Bill Polls",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/polls",
+          "host": ["{{base_url}}"],
+          "path": ["api", "polls"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5. Create Researched Bill Poll",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"National AI Ethics & Autonomous Vehicle Liability Bill 2026\",\n  \"bill_number\": \"Bill No. 201 of 2026 (Lok Sabha)\",\n  \"category\": \"Technology & Privacy\",\n  \"summary\": \"Fixes legal liability for autonomous vehicle accidents onto manufacturers and mandates continuous safety logging for self-driving neural networks.\",\n  \"official_source_url\": \"https://prsindia.org/billtrack/ai-liability-2026\",\n  \"fact_check_notes\": \"Verified via Parliamentary Standing Committee on IT.\",\n  \"citizen_hash\": \"citizen_v_sample_voter_1\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/polls",
+          "host": ["{{base_url}}"],
+          "path": ["api", "polls"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "6. Cast Vote FOR on a Bill",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"choice\": \"FOR\",\n  \"citizen_hash\": \"citizen_v_sample_voter_1\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/polls/poll-dpdp-2026/vote",
+          "host": ["{{base_url}}"],
+          "path": ["api", "polls", "poll-dpdp-2026", "vote"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "7. Cast Vote AGAINST on a Bill",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"choice\": \"AGAINST\",\n  \"citizen_hash\": \"citizen_v_sample_voter_2\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/polls/poll-dpdp-2026/vote",
+          "host": ["{{base_url}}"],
+          "path": ["api", "polls", "poll-dpdp-2026", "vote"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "8. Post Constructive Perspective in Forum (Approved)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"content\": \"This legislation establishes vital safeguards for citizen data autonomy while promoting technological innovation.\",\n  \"author_name\": \"Dr. Meera Sen\",\n  \"poll_id\": \"poll-dpdp-2026\",\n  \"citizen_hash\": \"citizen_v_sample_voter_1\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/forum/post",
+          "host": ["{{base_url}}"],
+          "path": ["api", "forum", "post"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "9. Post Discriminatory/Hate Content (Moderation Auto-Removal - 422)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"content\": \"All these low caste people and religious minorities should have no voting rights.\",\n  \"author_name\": \"Violating User\",\n  \"poll_id\": \"poll-dpdp-2026\",\n  \"citizen_hash\": \"citizen_v_violator\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/forum/post",
+          "host": ["{{base_url}}"],
+          "path": ["api", "forum", "post"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10. Get Approved Forum Feed",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/forum",
+          "host": ["{{base_url}}"],
+          "path": ["api", "forum"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

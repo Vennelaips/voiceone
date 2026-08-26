@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}{{ poll.title }} - VoiceOne Analysis & Civic Poll{% endblock %}
+
+{% block content %}
+<div style="max-width: 960px; margin: 0 auto;">
+
+    <!-- Breadcrumb -->
+    <div style="margin-bottom: 1.25rem; font-size: 0.9rem; font-weight: 600;">
+        <a href="{{ url_for('polls.dashboard') }}" style="color: var(--amaranth-pink); display: inline-flex; align-items: center; gap: 0.3rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Back to Active Bills
+        </a>
+    </div>
+
+    <!-- Main Bill Detail Paper Panel -->
+    <article class="paper-panel" id="poll-detail-panel">
+        
+        <div class="paper-panel-header">
+            <div>
+                <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 0.5rem;">
+                    <span class="brand-badge" style="background: var(--bg-sage-dark);">{{ poll.category }}</span>
+                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-ink-muted);">
+                        {{ poll.bill_number }}
+                    </span>
+                </div>
+                <h1 style="font-size: 1.9rem; line-height: 1.3;">{{ poll.title }}</h1>
+            </div>
+
+            <div id="vote-status-{{ poll.poll_id }}">
+                {% if poll.user_vote %}
+                    <span class="brand-badge" style="background: #2E7D32; font-size: 0.85rem; padding: 0.4rem 0.9rem;">
+                        Your Vote: {{ poll.user_vote }}
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Legislative Context & Summary -->
+        <div style="margin-bottom: 2rem;">
+            <h3 style="font-size: 1.15rem; margin-bottom: 0.75rem;">Official Summary & Legislative Scope</h3>
+            <p style="font-size: 1.05rem; line-height: 1.7; color: var(--text-ink-dark);">
+                {{ poll.summary }}
+            </p>
+        </div>
+
+        <!-- Official Research Source Box -->
+        <div class="paper-card" style="background: #FFFDF9; border-left: 4px solid var(--amaranth-pink); margin-bottom: 2rem;">
+            <h4 style="margin-bottom: 0.4rem; font-size: 0.95rem;">Verified Public Source:</h4>
+            <a href="{{ poll.official_source_url }}" target="_blank" rel="noopener noreferrer" style="font-weight: 700; text-decoration: underline; font-size: 0.95rem; word-break: break-all;">
+                {{ poll.official_source_url }}
+            </a>
+            <p style="font-size: 0.85rem; color: var(--text-ink-muted); margin-top: 0.3rem;">
+                <strong>Fact-Check Verification:</strong> {{ poll.fact_check_notes }}
+            </p>
+        </div>
+
+        <!-- Live Opinion Results Visualizer -->
+        <div class="paper-card" style="background: #FFF; margin-bottom: 2rem;">
+            <h3 style="font-size: 1.1rem; margin-bottom: 0.75rem; text-align: center;">Nationwide Citizen Voting Results</h3>
+            
+            <div class="vote-bar-container">
+                <div class="vote-bar-labels">
+                    <span class="label-for" id="pct-for-{{ poll.poll_id }}" style="font-size: 1.05rem;">
+                        {{ poll.pct_for }}% ({{ poll.votes_for }} For)
+                    </span>
+                    <span style="font-size: 0.9rem; color: var(--text-ink-muted);" id="total-votes-{{ poll.poll_id }}">
+                        {{ poll.total_votes }} Total Verified Citizen Votes
+                    </span>
+                    <span class="label-against" id="pct-against-{{ poll.poll_id }}" style="font-size: 1.05rem;">
+                        {{ poll.pct_against }}% ({{ poll.votes_against }} Against)
+                    </span>
+                </div>
+                <div class="vote-bar-track" style="height: 32px;">
+                    <div class="vote-bar-for" id="bar-for-{{ poll.poll_id }}" style="width: {{ poll.pct_for }}%;"></div>
+                    <div class="vote-bar-against" id="bar-against-{{ poll.poll_id }}" style="width: {{ poll.pct_against }}%;"></div>
+                </div>
+            </div>
+
+            <!-- Voting Action Section -->
+            <div style="margin-top: 2rem; text-align: center;">
+                {% if is_authenticated %}
+                <p style="font-weight: 700; color: var(--amaranth-pink); margin-bottom: 1rem;">
+                    Cast or update your verified opinion on this bill:
+                </p>
+                <form action="{{ url_for('polls.cast_vote', poll_id=poll.poll_id) }}" method="POST" class="async-vote-form" data-poll-id="{{ poll.poll_id }}" style="display: inline-flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                    <button type="submit" name="choice" value="FOR" class="btn btn-for {% if poll.user_vote == 'FOR' %}active{% endif %}" id="detail-btn-for">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Vote FOR (Support Bill)
+                    </button>
+                    <button type="submit" name="choice" value="AGAINST" class="btn btn-against {% if poll.user_vote == 'AGAINST' %}active{% endif %}" id="detail-btn-against">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        Vote AGAINST (Oppose Bill)
+                    </button>
+                </form>
+                {% else %}
+                <div style="background: var(--amaranth-soft); border: 2px solid var(--amaranth-pink); padding: 1.25rem; border-radius: var(--radius-paper); max-width: 500px; margin: 0 auto;">
+                    <p style="font-weight: 700; color: var(--amaranth-pink); margin-bottom: 0.75rem;">
+                        Authentication required to cast your opinion.
+                    </p>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary" id="btn-login-to-vote">
+                        Authenticate via DigiLocker (18+)
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </article>
+
+    <!-- Bill Discussion Forum Section -->
+    <section class="paper-panel" id="bill-discussion-section">
+        <div class="paper-panel-header">
+            <div>
+                <h2>Civic Discussion & Analysis</h2>
+                <p style="font-size: 0.9rem; color: var(--text-ink-muted);">Polite and respectful perspectives on this bill</p>
+            </div>
+            <span class="brand-badge" style="background: var(--bg-sage-dark);">Strict Moderation</span>
+        </div>
+
+        <!-- Civility Charter Reminder -->
+        <div class="forum-guidelines-banner">
+            <strong>Civic Discourse Rule:</strong> All citizens are expected to maintain courteous, polite discourse regardless of caste, class, religion, sexual orientation, or gender. Any violating posts are automatically removed by our civic moderation engine.
+        </div>
+
+        <!-- Post Comment Form -->
+        {% if is_authenticated %}
+        <form action="{{ url_for('forum.create_post') }}" method="POST" style="margin-bottom: 2rem;" id="post-comment-form">
+            <input type="hidden" name="poll_id" value="{{ poll.poll_id }}">
+            <input type="hidden" name="redirect_to" value="{{ request.path }}">
+            
+            <div class="form-group">
+                <label for="comment-content" class="form-label">Share your respectful perspective on this legislation</label>
+                <textarea id="comment-content" name="content" class="form-control" placeholder="Express your reasoning respectfully..." rows="3" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" id="btn-submit-comment">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                Post Perspective
+            </button>
+        </form>
+        {% else %}
+        <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-ink-muted);">
+            <a href="{{ url_for('auth.login') }}" style="font-weight: 700; text-decoration: underline;">Log in via DigiLocker</a> to join this discussion.
+        </p>
+        {% endif %}
+
+        <!-- Discussion Posts List -->
+        <div class="discussion-list">
+            {% if discussions %}
+                {% for disc in discussions %}
+                    <article class="discussion-post" id="post-{{ disc.post_id }}">
+                        <div class="post-header">
+                            <div class="author-meta">
+                                <div class="author-avatar">{{ disc.author_name[0] }}</div>
+                                <div>
+                                    <div class="author-name">{{ disc.author_name }}</div>
+                                    <span class="civic-verified-tag">DigiLocker Verified Citizen</span>
+                                </div>
+                            </div>
+                            <span class="post-time">{{ disc.created_at | time_ago }}</span>
+                        </div>
+                        
+                        <div class="post-content">
+                            {{ disc.content }}
+                        </div>
+
+                        <div class="post-footer">
+                            <button type="button" class="btn btn-secondary upvote-btn" data-post-id="{{ disc.post_id }}" style="padding: 0.3rem 0.75rem; font-size: 0.8rem;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+                                Polite & Insightful (<span class="upvote-count">{{ disc.upvotes }}</span>)
+                            </button>
+                        </div>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <p style="color: var(--text-ink-muted); font-size: 0.95rem; text-align: center; padding: 1.5rem 0;">
+                    No public perspectives shared yet on this bill. Be the first to share your constructive views!
+                </p>
+            {% endif %}
+        </div>
+
+    </section>
+
+</div>
+{% endblock %}

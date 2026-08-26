@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Propose Researched Bill or Policy - VoiceOne{% endblock %}
+
+{% block content %}
+<div style="max-width: 780px; margin: 0 auto;">
+
+    <div class="paper-panel">
+        <div class="paper-panel-header">
+            <div>
+                <h2>Submit Researched Bill or Public Action</h2>
+                <p style="font-size: 0.9rem; color: var(--text-ink-muted);">Propose legislative policy polls grounded in genuine public records</p>
+            </div>
+            <span class="brand-badge" style="background: var(--amaranth-pink);">Civic Standard</span>
+        </div>
+
+        <!-- Research Requirement Notice -->
+        <div class="alert alert-info" style="font-size: 0.88rem; margin-bottom: 1.5rem;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            <div>
+                <strong>Strict Fact-Checking Rule:</strong>
+                <br>VoiceOne is dedicated to genuine civic participation. Polls must reference verified news, gazette notifications, or parliamentary bills. Unverified gossip or misleading claims will be rejected.
+            </div>
+        </div>
+
+        <form action="{{ url_for('polls.create_poll') }}" method="POST" id="create-poll-form">
+            
+            <div class="form-group">
+                <label for="poll-title" class="form-label">Official Title of the Bill, Act, or Societal Action *</label>
+                <input type="text" id="poll-title" name="title" class="form-control" placeholder="e.g. National Clean Air & Renewable Transition Act 2026" required value="{{ form_data.title if form_data else '' }}">
+            </div>
+
+            <div class="grid-2" style="margin-bottom: 1.5rem;">
+                <div>
+                    <label for="poll-bill-number" class="form-label">Bill / Gazette Reference Number</label>
+                    <input type="text" id="poll-bill-number" name="bill_number" class="form-control" placeholder="e.g. Bill No. 104 of 2026 (Lok Sabha)" value="{{ form_data.bill_number if form_data else '' }}">
+                </div>
+
+                <div>
+                    <label for="poll-category" class="form-label">Policy Sector / Category *</label>
+                    <select id="poll-category" name="category" class="form-control" required>
+                        <option value="Technology & Privacy">Technology & Privacy</option>
+                        <option value="Environment & Energy">Environment & Energy</option>
+                        <option value="Labor & Economy">Labor & Economy</option>
+                        <option value="Healthcare & Welfare">Healthcare & Welfare</option>
+                        <option value="Education & Rights">Education & Rights</option>
+                        <option value="Constitutional Law">Constitutional Law</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="poll-source-url" class="form-label">Official Source or Gazette Research URL *</label>
+                <input type="url" id="poll-source-url" name="official_source_url" class="form-control" placeholder="https://prsindia.org/... or https://egazette.gov.in/..." required value="{{ form_data.official_source_url if form_data else '' }}">
+                <small style="color: var(--text-ink-muted); font-size: 0.8rem; display: block; margin-top: 0.3rem;">
+                    Must point to a verified news report, legislative repository (e.g. PRS India, Lok Sabha/Rajya Sabha portal), or government notification.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="poll-summary" class="form-label">Objective Summary of the Bill / Policy Provisions *</label>
+                <textarea id="poll-summary" name="summary" class="form-control" placeholder="Provide a balanced, objective summary of the bill's key clauses, proposed amendments, and social impacts..." required>{{ form_data.summary if form_data else '' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="poll-fact-check" class="form-label">Fact-Check / Context Notes</label>
+                <input type="text" id="poll-fact-check" name="fact_check_notes" class="form-control" placeholder="e.g. Draft reviewed by parliamentary standing committee" value="{{ form_data.fact_check_notes if form_data else '' }}">
+            </div>
+
+            <!-- E-Ink Paper Ballot Preview -->
+            <div class="paper-card" style="background: #FFF; margin: 2rem 0; border: 2px dashed var(--amaranth-pink);">
+                <h4 style="margin-bottom: 0.5rem;">Citizen Voting Format Preview:</h4>
+                <p style="font-size: 0.85rem; color: var(--text-ink-muted); margin-bottom: 1rem;">
+                    Citizens will cast their verified vote between binary choices:
+                </p>
+                <div style="display: flex; gap: 1rem;">
+                    <div style="flex: 1; padding: 0.75rem; text-align: center; background: #E8F5E9; border: 2px solid #2E7D32; border-radius: 6px; font-weight: 700; color: #2E7D32;">
+                        FOR (Support Bill)
+                    </div>
+                    <div style="flex: 1; padding: 0.75rem; text-align: center; background: #FCE4EC; border: 2px solid #C2185B; border-radius: 6px; font-weight: 700; color: #C2185B;">
+                        AGAINST (Oppose Bill)
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary" id="btn-submit-poll" style="flex: 1; padding: 0.9rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                    Publish Verified Civic Poll
+                </button>
+                <a href="{{ url_for('polls.dashboard') }}" class="btn btn-secondary" style="flex: 0.5; padding: 0.9rem;">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+{% endblock %}

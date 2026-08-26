@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Civic Forum & Polite Discourse - VoiceOne{% endblock %}
+
+{% block content %}
+<div style="max-width: 960px; margin: 0 auto;">
+
+    <!-- Forum Header Paper Panel -->
+    <div class="paper-panel">
+        <div class="paper-panel-header">
+            <div>
+                <h1>Civic Discussion Forum</h1>
+                <p style="font-size: 0.95rem; color: var(--text-ink-muted);">Constructive, respectful deliberation on legislation and public welfare</p>
+            </div>
+            <div class="brand-badge" style="background: var(--amaranth-pink);">Polite Discourse</div>
+        </div>
+
+        <!-- Civility Charter Box -->
+        <div class="forum-guidelines-banner" style="border: 2.5px solid var(--amaranth-pink); background: #FFFDF9; padding: 1.25rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9F2B68" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <h3 style="font-size: 1.05rem; margin: 0; color: var(--amaranth-pink);">VoiceOne Civility & Non-Discrimination Charter</h3>
+            </div>
+            <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-ink-dark);">
+                All citizens participating in VoiceOne forums are required to remain polite and considerate of fellow citizens. Discourse must remain free of discrimination or hostility based on <strong>caste, class, religion, sexual orientation, or gender</strong>. Any post violating these standards is <strong>immediately removed</strong> by our automated moderation engine.
+            </p>
+        </div>
+
+        <!-- Post Creation Form -->
+        {% if is_authenticated %}
+        <form action="{{ url_for('forum.create_post') }}" method="POST" id="forum-post-form" style="margin-top: 1.5rem;">
+            <div class="form-group">
+                <label for="post-poll-select" class="form-label">Related Legislative Bill or Policy Topic</label>
+                <select id="post-poll-select" name="poll_id" class="form-control">
+                    <option value="general">General National Policy & Governance</option>
+                    {% for p in polls %}
+                        <option value="{{ p.poll_id }}">{{ p.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="post-content-input" class="form-label">Your Constructive Perspective *</label>
+                <textarea id="post-content-input" name="content" class="form-control" placeholder="Share your insights respectfully..." rows="3" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="btn-submit-forum-post" style="padding: 0.75rem 1.75rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                Publish Perspective
+            </button>
+        </form>
+        {% else %}
+        <div class="paper-card" style="text-align: center; background: var(--amaranth-soft); margin-top: 1.5rem;">
+            <p style="font-weight: 700; color: var(--amaranth-pink); margin-bottom: 0.75rem;">
+                Authenticated DigiLocker verification (18+) is required to post in the forum.
+            </p>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
+                Verify via DigiLocker
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Filter Discussions -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.25rem;">Approved Civic Perspectives</h3>
+        
+        <form action="{{ url_for('forum.forum_index') }}" method="GET" style="display: flex; gap: 0.5rem; align-items: center;">
+            <label for="filter-poll-select" style="font-size: 0.85rem; font-weight: 700; color: var(--amaranth-pink);">Filter Topic:</label>
+            <select id="filter-poll-select" name="poll_id" class="form-control" onchange="this.form.submit()" style="padding: 0.35rem 0.75rem; font-size: 0.85rem; width: auto;">
+                <option value="All" {% if selected_poll == 'All' %}selected{% endif %}>All Discussions</option>
+                <option value="general" {% if selected_poll == 'general' %}selected{% endif %}>General Governance</option>
+                {% for p in polls %}
+                    <option value="{{ p.poll_id }}" {% if selected_poll == p.poll_id %}selected{% endif %}>{{ p.title[:35] }}...</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    <!-- Posts Feed -->
+    <div class="forum-feed" id="forum-posts-container">
+        {% if posts %}
+            {% for post in posts %}
+                <article class="discussion-post" id="forum-post-{{ post.post_id }}">
+                    <div class="post-header">
+                        <div class="author-meta">
+                            <div class="author-avatar">{{ post.author_name[0] }}</div>
+                            <div>
+                                <div class="author-name">{{ post.author_name }}</div>
+                                <span class="civic-verified-tag">DigiLocker Verified Citizen</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span class="brand-badge" style="background: var(--bg-sage-dark); font-size: 0.7rem;">{{ post.poll_title[:30] }}</span>
+                            <div class="post-time" style="margin-top: 0.2rem;">{{ post.created_at | time_ago }}</div>
+                        </div>
+                    </div>
+
+                    <div class="post-content">
+                        {{ post.content }}
+                    </div>
+
+                    <div class="post-footer">
+                        <button type="button" class="btn btn-secondary upvote-btn" data-post-id="{{ post.post_id }}" style="padding: 0.3rem 0.75rem; font-size: 0.8rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+                            Polite & Insightful (<span class="upvote-count">{{ post.upvotes }}</span>)
+                        </button>
+
+                        <form action="{{ url_for('forum.report_post', post_id=post.post_id) }}" method="POST" style="display: inline;">
+                            <button type="submit" style="background: none; border: none; color: var(--text-ink-muted); font-size: 0.75rem; cursor: pointer; text-decoration: underline;">
+                                Report Violation
+                            </button>
+                        </form>
+                    </div>
+                </article>
+            {% endfor %}
+        {% else %}
+            <div class="paper-panel" style="text-align: center; padding: 2.5rem;">
+                <h3>No Forum Discussions Yet</h3>
+                <p style="color: var(--text-ink-muted); margin-top: 0.5rem;">Share the first constructive opinion on active policies!</p>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

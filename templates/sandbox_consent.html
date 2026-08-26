@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}DigiLocker OAuth 2.0 Consent Screen - VoiceOne{% endblock %}
+
+{% block content %}
+<div style="max-width: 620px; margin: 0 auto;">
+    
+    <div class="paper-panel">
+        <div style="text-align: center; border-bottom: 2px dashed var(--amaranth-pink); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: var(--amaranth-soft); border: 2px solid var(--amaranth-pink); margin-bottom: 0.75rem;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9F2B68" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            </div>
+            <h2>DigiLocker Verification Gateway</h2>
+            <p style="font-size: 0.9rem; color: var(--text-ink-muted);">OAuth 2.0 Secure Citizen KYC Authorization</p>
+        </div>
+
+        <div class="alert alert-warning" style="font-size: 0.85rem;">
+            <strong>Requested Permissions by VoiceOne:</strong>
+            <ul style="margin-left: 1.25rem; margin-top: 0.5rem;">
+                <li>Verified Full Name</li>
+                <li>Date of Birth (For 18+ Age Eligibility Check)</li>
+                <li>Aadhaar Identity Reference (Processed into Salted Hash only)</li>
+            </ul>
+        </div>
+
+        <form action="{{ url_for('auth.sandbox_consent', state=state) }}" method="POST">
+            <div class="form-group">
+                <label class="form-label">Citizen Name</label>
+                <input type="text" name="name" class="form-control" value="Ananya Deshmukh" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Aadhaar Number (12 Digits)</label>
+                <input type="text" name="aadhaar" class="form-control" value="874512963401" maxlength="12" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Date of Birth</label>
+                <input type="date" name="dob" class="form-control" value="2000-05-15" required>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    Authorize & Grant DigiLocker Consent
+                </button>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-secondary" style="flex: 1;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

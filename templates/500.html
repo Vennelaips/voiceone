@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}System Error - VoiceOne{% endblock %}
+{% block content %}
+<div class="paper-panel" style="max-width: 600px; margin: 3rem auto; text-align: center; padding: 3rem 2rem;">
+    <h1 style="font-size: 3rem; margin-bottom: 0.5rem;">500</h1>
+    <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Internal Server Error</h2>
+    <p style="color: var(--text-ink-muted); margin-bottom: 2rem;">
+        An unexpected issue occurred while verifying civic state. Our security systems have logged the incident.
+    </p>
+    <a href="{{ url_for('polls.dashboard') }}" class="btn btn-primary">Return to Active Bills</a>
+</div>
+{% endblock %}
