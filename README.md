@@ -12,6 +12,7 @@
 
 ---
 ## Architecture & System Design
+
 +-------------------------------------------------------------------------+
 |                              VoiceOne UI                                |
 |  Theme: Sage Green (#87AE73) Backdrop + Amaranth Pink (#9F2B68) Accents |
