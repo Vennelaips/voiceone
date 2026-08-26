@@ -1,6 +1,6 @@
 # VoiceOne 🗳️ — Secure & Privacy-Preserving Civic Polling
 
-**VoiceOne** is a sovereign civic polling and discussion platform enabling citizens to express verified opinions on legislative bills, national laws, and societal policies. Authenticated via **DigiLocker OAuth 2.0**, citizens are verified to be 18+ years of age, while their **Aadhaar numbers are never stored in plaintext**—they are cryptographically salted and hashed into unique anonymous voter identifiers (`citizen_v_...`).
+**VoiceOne** is a sovereign civic polling and discussion platform enabling citizens to express verified opinions on legislative bills, national laws, and societal policies. Authenticated via **DigiLocker OAuth 2.0**, citizens are verified to be 18+ years of age, while their **Aadhaar numbers are never stored in plaintext**—they are cryptographically salted and hashed into unique anonymous voter identifiers.
 
 ---
 
@@ -11,6 +11,33 @@
 - **Typography**: Google Fonts (*Outfit* and *Plus Jakarta Sans*).
 
 ---
+## Architecture & System Design
++-------------------------------------------------------------------------+
+|                              VoiceOne UI                                |
+|  Theme: Sage Green (#87AE73) Backdrop + Amaranth Pink (#9F2B68) Accents |
++------------------------------------+------------------------------------+
+                                     |
+                RESTful / Form Requests & AJAX Polling
+                                     |
++------------------------------------v------------------------------------+
+|                         Flask Application Core                          |
+|                                                                         |
+|  +------------------------+  +--------------------+  +---------------+  |
+|  | DigiLocker OAuth2 /    |  | Verified Bill /    |  | Anti-Hate /   |  |
+|  | Cryptographic Hashing  |  | Binary Polling     |  | Civic Forum   |  |
+|  | (18+ Age Verification) |  | (For vs Against)   |  | Moderation    |  |
+|  +------------------------+  +--------------------+  +---------------+  |
++------------------------------------+------------------------------------+
+                                     |
+              PyMongo / MongoMock Persistence Layer
+                                     |
++------------------------------------v------------------------------------+
+|                             MongoDB Data                                |
+|    - Users (Citizen Hash, Age Verified, DigiLocker Auth Token)          |
+|    - Polls (Bill Title, Gazette/Fact-Check Link, Votes: For / Against)  |
+|    - ForumPosts (Author Hash, Content, Civility Status, Mod Flags)      |
++-------------------------------------------------------------------------+
+
 
 ## 🛡️ Core Security & Architectural Features
 
