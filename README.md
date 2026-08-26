@@ -11,6 +11,7 @@
 - **Typography**: Google Fonts (*Outfit* and *Plus Jakarta Sans*).
 
 ---
+## Architecture & System Design
 ```
 +-------------------------------------------------------------------------+
 |                              VoiceOne UI                                |
