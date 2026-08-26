@@ -11,34 +11,6 @@
 - **Typography**: Google Fonts (*Outfit* and *Plus Jakarta Sans*).
 
 ---
-## Architecture & System Design
-
-+-------------------------------------------------------------------------+
-|                              VoiceOne UI                                |
-|  Theme: Sage Green (#87AE73) Backdrop + Amaranth Pink (#9F2B68) Accents |
-+------------------------------------+------------------------------------+
-                                     |
-                RESTful / Form Requests & AJAX Polling
-                                     |
-+------------------------------------v------------------------------------+
-|                         Flask Application Core                          |
-|                                                                         |
-|  +------------------------+  +--------------------+  +---------------+  |
-|  | DigiLocker OAuth2 /    |  | Verified Bill /    |  | Anti-Hate /   |  |
-|  | Cryptographic Hashing  |  | Binary Polling     |  | Civic Forum   |  |
-|  | (18+ Age Verification) |  | (For vs Against)   |  | Moderation    |  |
-|  +------------------------+  +--------------------+  +---------------+  |
-+------------------------------------+------------------------------------+
-                                     |
-              PyMongo / MongoMock Persistence Layer
-                                     |
-+------------------------------------v------------------------------------+
-|                             MongoDB Data                                |
-|    - Users (Citizen Hash, Age Verified, DigiLocker Auth Token)          |
-|    - Polls (Bill Title, Gazette/Fact-Check Link, Votes: For / Against)  |
-|    - ForumPosts (Author Hash, Content, Civility Status, Mod Flags)      |
-+-------------------------------------------------------------------------+
-
 
 ## 🛡️ Core Security & Architectural Features
 
