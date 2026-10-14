@@ -1,6 +1,6 @@
 # VoiceOne 🗳️ — Secure & Privacy-Preserving Civic Polling
 
-**VoiceOne** is a sovereign civic polling and discussion platform enabling citizens to express verified opinions on legislative bills, national laws, and societal policies. Authenticated via **DigiLocker OAuth 2.0**, citizens are verified to be 18+ years of age, while their **Aadhaar numbers are never stored in plaintext**—they are cryptographically salted and hashed into unique anonymous voter identifiers (`citizen_v_...`).
+**VoiceOne** is a sovereign civic polling and discussion platform enabling citizens to express verified opinions on legislative bills, national laws, and societal policies. Authenticated via **DigiLocker OAuth 2.0**, citizens are verified to be 18+ years of age, while their **Aadhaar numbers are never stored in plaintext**—they are cryptographically salted and hashed into unique anonymous voter identifiers.
 
 ---
 
@@ -11,6 +11,35 @@
 - **Typography**: Google Fonts (*Outfit* and *Plus Jakarta Sans*).
 
 ---
+## Architecture & System Design
+```
++-------------------------------------------------------------------------+
+|                              VoiceOne UI                                |
+|  Theme: Sage Green (#87AE73) Backdrop + Amaranth Pink (#9F2B68) Accents |
++------------------------------------+------------------------------------+
+                                     |
+                RESTful / Form Requests & AJAX Polling
+                                     |
++------------------------------------v------------------------------------+
+|                         Flask Application Core                          |
+|                                                                         |
+|  +------------------------+  +--------------------+  +---------------+  |
+|  | DigiLocker OAuth2 /    |  | Verified Bill /    |  | Anti-Hate /   |  |
+|  | Cryptographic Hashing  |  | Binary Polling     |  | Civic Forum   |  |
+|  | (18+ Age Verification) |  | (For vs Against)   |  | Moderation    |  |
+|  +------------------------+  +--------------------+  +---------------+  |
++------------------------------------+------------------------------------+
+                                     |
+              PyMongo / MongoMock Persistence Layer
+                                     |
++------------------------------------v------------------------------------+
+|                             MongoDB Data                                |
+|    - Users (Citizen Hash, Age Verified, DigiLocker Auth Token)          |
+|    - Polls (Bill Title, Gazette/Fact-Check Link, Votes: For / Against)  |
+|    - ForumPosts (Author Hash, Content, Civility Status, Mod Flags)      |
++-------------------------------------------------------------------------+
+
+```
 
 ## 🏛️ System Architecture & Workflow Diagram
 
@@ -86,40 +115,3 @@ flowchart TB
 
 ---
 
-## 🚀 Quick Start
-
-### 1. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 2. Run the Application
-```bash
-python app.py
-```
-Open your browser at [http://127.0.0.1:5000](http://127.0.0.1:5000).
-
----
-
-## 🧪 Testing
-
-### 1. Automated Backend Unit & Integration Tests
-```bash
-python -m unittest tests/test_backend.py
-```
-
-### 2. Automated Selenium Browser Workflow
-```bash
-python -m unittest tests/test_voiceone_selenium.py
-```
-
-### 3. Postman API Validation
-Import `tests/VoiceOne_Postman_Collection.json` and `tests/VoiceOne_Postman_Environment.json` into Postman to execute all API endpoints.
-
----
-
-## ☁️ Deployment on Render
-1. Push the repository to GitHub.
-2. Create a new **Web Service** on [Render.com](https://render.com).
-3. Connect your repository. Render will automatically detect `render.yaml` and `Procfile`.
-4. Set environment variables (e.g. `MONGO_URI`, `SECRET_KEY`, `AADHAAR_HASH_SALT`).
