@@ -12,6 +12,62 @@
 
 ---
 
+## 🏛️ System Architecture & Workflow Diagram
+
+```mermaid
+flowchart TB
+    subgraph ClientLayer["🖥️ Frontend & Citizen UI (E-Ink Paper / Sage & Amaranth)"]
+        UI_Login["Citizen Login Form<br/>(Name, Aadhaar, DOB)"]
+        UI_Bills["Active Bills & Law Feed<br/>(Binary Voting: FOR / AGAINST)"]
+        UI_Forum["Civic Discussion Forum<br/>(Polite, Respectful Perspectives)"]
+        UI_Create["Propose Researched Bill<br/>(Official Gazette / Fact-Check Link)"]
+    end
+
+    subgraph SecurityLayer["🛡️ Identity & Privacy-Preserving Engine"]
+        AgeCheck{"Age Verification<br/>(Calculated Age >= 18?)"}
+        AgeReject["❌ Denied (403 Forbidden)<br/>Must be 18+ to vote"]
+        HMAC["🔐 Salted HMAC-SHA256<br/>Zero-Knowledge Aadhaar Hashing"]
+        AnonVoter["Citizen Pseudonym Generated<br/>(citizen_v_...)<br/>⚡ Raw Aadhaar Immediately Discarded"]
+        DigiOAuth["🏛️ DigiLocker OAuth 2.0 Gateway<br/>(Token & KYC Authentication)"]
+    end
+
+    subgraph BackendCore["⚙️ VoiceOne Flask Backend Services"]
+        AuthService["Auth & Session Controller<br/>(routes/auth_routes.py)"]
+        PollService["Verified Bill & Voting Engine<br/>(routes/poll_routes.py)<br/>• Atomic Deduplication (1 Voter = 1 Vote)<br/>• Real-Time Asynchronous Tallying"]
+        ModEngine["Civic Moderation Engine<br/>(services/moderation.py)<br/>• Scans Caste, Class, Religion, Gender & Orientation<br/>• Auto-Removes Violations"]
+        APIService["RESTful API Endpoints<br/>(routes/api_routes.py)"]
+    end
+
+    subgraph DatabaseLayer["🗄️ Persistence Layer (MongoDB / MongoMock Dual Mode)"]
+        DB_Users[("Users Collection<br/>• Citizen Hash<br/>• Age (18+ Verified)<br/>• Total Votes")]
+        DB_Polls[("Polls Collection<br/>• Bill Title & Gazette URL<br/>• Votes: For / Against<br/>• Voter Fingerprints")]
+        DB_Forum[("Forum Posts Collection<br/>• Author Hash<br/>• Approved Content<br/>• Timestamp & Upvotes")]
+    end
+
+    %% Flow connections
+    UI_Login -->|"Submit Credentials"| AgeCheck
+    AgeCheck -->|"Age < 18"| AgeReject
+    AgeCheck -->|"Age >= 18"| HMAC
+    HMAC --> AnonVoter
+    AnonVoter --> AuthService
+    UI_Login <-->|"OAuth 2.0 Handshake"| DigiOAuth
+    DigiOAuth --> AuthService
+    
+    AuthService --> DB_Users
+    
+    UI_Bills -->|"Cast / Toggle Vote"| PollService
+    UI_Create -->|"Submit Researched Bill"| PollService
+    PollService --> DB_Polls
+    
+    UI_Forum -->|"Post Perspective"| ModEngine
+    ModEngine -->|"Approved"| DB_Forum
+    ModEngine -->|"Violation Detected"| UI_Forum
+    
+    APIService <-->|"Postman / Automated Suite"| BackendCore
+```
+
+---
+
 ## 🛡️ Core Security & Architectural Features
 
 1. **DigiLocker OAuth 2.0 & Salted Aadhaar Anonymization**:

@@ -109,34 +109,8 @@ class Database:
             ]
             db.polls.insert_many(sample_bills)
 
-        if db.forum_posts.count_documents({}) == 0:
-            sample_discussions = [
-                {
-                    "post_id": "post-civic-101",
-                    "poll_id": "poll-dpdp-2026",
-                    "poll_title": "Digital Personal Data Protection & AI Governance Amendment 2026",
-                    "author_hash": "citizen_v_a98b71c4e90",
-                    "author_name": "Aarav Sharma",
-                    "content": "The 30-day retention ceiling for AI biometrics is a massive step forward for constitutional privacy rights. We need clear auditing standards for verification bodies.",
-                    "status": "APPROVED",
-                    "violations": [],
-                    "upvotes": 18,
-                    "created_at": datetime.now().isoformat()
-                },
-                {
-                    "post_id": "post-civic-102",
-                    "poll_id": "poll-gig-workers-2026",
-                    "poll_title": "Gig & Platform Economy Workers Social Security Bill 2026",
-                    "author_hash": "citizen_v_3b88d2f419c",
-                    "author_name": "Priya Nair",
-                    "content": "Platform companies generate immense market valuation. A 2% welfare contribution will finally provide a social safety net for thousands of delivery workers without hurting consumer prices.",
-                    "status": "APPROVED",
-                    "violations": [],
-                    "upvotes": 24,
-                    "created_at": datetime.now().isoformat()
-                }
-            ]
-            db.forum_posts.insert_many(sample_discussions)
+        # Clean up any legacy synthetic posts if present
+        db.forum_posts.delete_many({"post_id": {"$in": ["post-civic-101", "post-civic-102"]}})
 
 def get_db():
     return Database.get_db()
